@@ -1,6 +1,6 @@
 <?php
 
-const USERS_FILE = 'users.txt';
+const USERS_FILE = 'users.json';
 
 function showHTML()
 {
@@ -72,28 +72,13 @@ function showContactBook()
 
 function getContacts(): array
 {
-    $usersString = file_get_contents(USERS_FILE);
-    $u = explode(PHP_EOL, $usersString);
+    $jsonString = file_get_contents(USERS_FILE);
 
-    $users = [];
-
-    foreach ($u as $userRow) {
-        $parts = explode(';', $userRow);
-        $user = [];
-        foreach ($parts as $keyValue) {
-            $p = explode('=', $keyValue);
-            $key = $p[0];
-            $value = $p[1];
-            $user[$key] = $value;
-        }
-
-        $users[] = $user;
-    }
-
-    return $users;
+    return json_decode($jsonString, true) ?? [];
 }
 
-function createContact(string $name, string $phone) {
+function createContact(string $name, string $phone)
+{
     $users = getContacts();
     $users[] = [
         'name' => $name,
@@ -104,18 +89,51 @@ function createContact(string $name, string $phone) {
 
 function writeUsersToFile(array $users)
 {
-    $stringToWrite = '';
+    $json = json_encode($users);
 
-    foreach ($users as $user) {
-        foreach ($user as $key => $value) {
-            $stringToWrite .= "$key=$value;";
-        }
-
-        $stringToWrite = rtrim($stringToWrite, ';');
-        $stringToWrite .= PHP_EOL;
-    }
-
-    $stringToWrite = rtrim($stringToWrite, PHP_EOL);
-
-    file_put_contents(USERS_FILE, $stringToWrite);
+    file_put_contents(USERS_FILE, $json);
 }
+
+
+/**
+ * $arr = [
+ *      [
+ *          'name' => 'Oleg',
+ *          'age' => 11
+ *      ],
+ *      [
+ *          'name' => 'Tester',
+ *          'age' => -1
+ *      ]
+ * ];
+ *
+ * name=Oleg;age=11
+ * name=Tester;age=-1
+ *
+ *      ],
+ */
+
+
+
+
+
+
+/**
+ * name=Oleg;age=11
+ * name=Tester;age=-1
+ *
+ *
+ *
+ * [
+ * [
+ * name => Oleg
+ * age => 11
+ * ],
+ *
+ *
+ * [
+ * name => Tester,
+ * age => -1
+ * ]
+ * ]
+ */
