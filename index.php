@@ -1,12 +1,9 @@
 <?php
 
+$pieces = explode('.', $_FILES['file']['name']);
+$pieces = array_reverse($pieces);
+$ext = $pieces[0];
+$fileName = (time() . rand(10000,99999)) . '.' . $ext;
+$folderToUpload = __DIR__ . '/files/';
 
-file_put_contents("index.txt", 'hello', FILE_APPEND);
-
-
-
-$f = fopen('index.txt', 'r');
-
-while ($txt = fread($f, 4)) {
-    echo $txt;
-}
+copy($_FILES['file']['tmp_name'], $folderToUpload . $fileName);
