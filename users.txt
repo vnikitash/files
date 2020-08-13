@@ -1,3 +1,0 @@
-name=Viktor;phone=+123123123
-name=aaaa;phone=aaaaaa
-name=123123;phone=adssad
